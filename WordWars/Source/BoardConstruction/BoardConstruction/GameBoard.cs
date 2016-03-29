@@ -22,6 +22,7 @@ namespace BoardConstruction
         public char[,] Board = null;
         public List<Tuple<int, int>>[,] Neighbors = null;
 
+        // board will work lower case, no matter the init data
         public GameBoard(char [,] initData)
         {
             if (initData == null) throw new ArgumentException("Must pass a valid non-null board");
@@ -32,11 +33,12 @@ namespace BoardConstruction
             Board = initData;
             Neighbors = new List<Tuple<int, int>>[Size, Size];
 
-            // init neighbours
+            // init neighbors and lower case the board
             for (int i = 0; i < Size; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
+                    Board[i, j] = Char.ToLower(Board[i, j]);
                     Neighbors[i, j] = new List<Tuple<int, int>>();
 
                     // fill neighbors
@@ -73,7 +75,7 @@ namespace BoardConstruction
             }
         }
 
-        public override string ToString()
+        public string ToFormattedString()
         {
             StringBuilder result = new StringBuilder();
 
@@ -85,6 +87,22 @@ namespace BoardConstruction
                     if (j == 0) result.Append("|");
                     result.AppendFormat(" {0} ", Board[i, j]);
                     result.Append("|");
+                }
+                result.AppendLine();
+            }
+
+            return result.ToString();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    result.Append(Board[i, j]);
                 }
                 result.AppendLine();
             }

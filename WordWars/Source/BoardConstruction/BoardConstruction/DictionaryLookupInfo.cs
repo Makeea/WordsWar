@@ -67,7 +67,7 @@ namespace BoardConstruction
             foreach (string w in dictionary.Words)
             {
                 // only words MinWordLength char or more.
-                if (w.Length < WordDictionary.MinWordLength) break;
+                if (w.Length < dictionary.MinWordLength) break;
 
                 StringBuilder sb = new StringBuilder();
 
