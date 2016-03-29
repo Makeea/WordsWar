@@ -8,8 +8,8 @@
     <ProjectGuid>{2BF46C1B-484A-4CFC-B502-1FF5D5436696}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoardPreCalcUnitTest</RootNamespace>
-    <AssemblyName>BoardPreCalcUnitTest</AssemblyName>
+    <RootNamespace>BoardConstruction.UnitTest</RootNamespace>
+    <AssemblyName>BoardConstruction.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -59,8 +59,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoardTests.cs" />
-    <Compile Include="DictionaryTest.cs" />
+    <Compile Include="GameBoard.Tests.cs" />
+    <Compile Include="WordDictionary.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,13 +70,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BoardPreCalc\BoardPreCalc.csproj">
-      <Project>{45070685-f859-41c7-8fba-2de97a4673da}</Project>
-      <Name>BoardPreCalc</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\BoardConstruction\BoardConstruction.csproj">
+      <Project>{45070685-f859-41c7-8fba-2de97a4673da}</Project>
+      <Name>BoardConstruction</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,4 +1,4 @@
-﻿using BoardPreCalc;
+﻿using BoardConstruction;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BoardPreCalcUnitTest
+namespace BoardConstructionUnitTest
 {
-    public class BoardTests
+    public class GameBoardTests
     {
         [Fact]
         void twobytwoboard()

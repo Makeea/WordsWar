@@ -1,20 +1,45 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoardPreCalc
+namespace BoardConstruction
 {
-    public class WordDictionary
+    public class WordLookupInfoData
     {
-        public List<string> Words;
-        public const int MinWordLength = 3;
+        public bool IsWord = false;
+        public bool HasChildren = false;
 
-        public WordDictionary(List<string> words)
+        public override bool Equals(object obj)
         {
-            Words = words;
+            if (obj is WordLookupInfoData)
+            {
+                WordLookupInfoData other = (WordLookupInfoData) obj;
+                return ((other.IsWord == IsWord) && (other.HasChildren == HasChildren));
+            }
+            else
+                return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+    }
+
+    public class DictionaryLookupInfo
+    {
+        public Dictionary<string, WordLookupInfoData> LookupInfo = new Dictionary<string, WordLookupInfoData>();
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (var item in LookupInfo)
+            {
+                result.AppendFormat("Key: {0} \t\tIsWord: {1} \t\tHasChildren: {2}", item.Key, item.Value.IsWord, item.Value.HasChildren);
+                result.AppendLine();
+            }
+            return result.ToString();
         }
 
         // To make things fast, I should break down all the words in the dictionary in sequence of letters, as an indication there is a word I want, for example:
@@ -35,14 +60,14 @@ namespace BoardPreCalc
         //	brea	  n			  y
         //	bred	  y			  y
         //	bread	  y			  y
-        public WordLookupInfo BuildLookupInfo()
+        public static DictionaryLookupInfo BuildLookupInfo(WordDictionary dictionary)
         {
-            WordLookupInfo result = new WordLookupInfo();
+            DictionaryLookupInfo result = new DictionaryLookupInfo();
 
-            foreach (string w in Words)
+            foreach (string w in dictionary.Words)
             {
                 // only words MinWordLength char or more.
-                if (w.Length < MinWordLength) break;
+                if (w.Length < WordDictionary.MinWordLength) break;
 
                 StringBuilder sb = new StringBuilder();
 
@@ -61,10 +86,11 @@ namespace BoardPreCalc
                     id.HasChildren |= (i < (w.Length - 1));
 
                     result.LookupInfo[key] = id;
-                }                
+                }
             }
 
             return result;
         }
+
     }
 }

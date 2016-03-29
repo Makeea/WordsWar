@@ -1,4 +1,4 @@
-﻿using BoardPreCalc;
+﻿using BoardConstruction;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BoardPreCalcUnitTest
+namespace BoardConstructionUnitTest
 {
-    public class DictionaryTest
+    public class WordDictionaryTest
     {
         [Fact]
         void TestDictLookup()
         {
             // bread and bred
             WordDictionary dict = new WordDictionary(new List<string> () { "bre", "bread", "bred" });
-            WordLookupInfo result = dict.BuildLookupInfo();
+            DictionaryLookupInfo result = DictionaryLookupInfo.BuildLookupInfo(dict);
             Assert.Equal(6, result.LookupInfo.Count);
             Assert.Equal(result.LookupInfo["b"], new WordLookupInfoData() { HasChildren = true, IsWord = false });
             Assert.Equal(result.LookupInfo["br"], new WordLookupInfoData() { HasChildren = true, IsWord = false });
@@ -39,7 +39,7 @@ namespace BoardPreCalcUnitTest
             }
 
             WordDictionary dict = new WordDictionary(listA);
-            WordLookupInfo result = dict.BuildLookupInfo();
+            DictionaryLookupInfo result = DictionaryLookupInfo.BuildLookupInfo(dict);
 
         }
     }
