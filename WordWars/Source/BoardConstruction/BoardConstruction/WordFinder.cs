@@ -9,7 +9,7 @@ namespace BoardConstruction
     public class WordFinder
     {
         // Note: it will return words in lower case, as input is normalized to be lower case
-        static public List<string> FindWords(GameBoard board, WordDictionary dictionary)
+        static public List<string> FindWords(GameBoard board, Dictionary dictionary)
         {
             List<string> result = new List<string>();
 

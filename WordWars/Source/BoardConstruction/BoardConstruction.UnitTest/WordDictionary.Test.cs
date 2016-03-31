@@ -16,7 +16,7 @@ namespace BoardConstructionUnitTest
         void TestDictLookup()
         {
             // bread and bred
-            WordDictionary dict = new WordDictionary(new List<string> () { "bre", "bread", "bred" });
+            Dictionary dict = new Dictionary(new List<string> () { "bre", "bread", "bred" });
             DictionaryLookupInfo result = DictionaryLookupInfo.BuildLookupInfo(dict);
             Assert.Equal(6, result.LookupInfo.Count);
             Assert.Equal(result.LookupInfo["b"], new WordLookupInfoData() { HasChildren = true, IsWord = false });
@@ -30,15 +30,9 @@ namespace BoardConstructionUnitTest
         [Fact]
         void FiveKWords()
         {
-            var reader = new StreamReader(File.OpenRead(@".\5000Words.csv"));
-            List<string> listA = new List<string>();
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                listA.Add(line);
-            }
-
-            WordDictionary dict = new WordDictionary(listA);
+            Dictionary.LoadDictionaryInfo("./BoardData/dictionaryinfo.json");
+            Dictionary dict = Dictionary.LoadFromInfo("5kwords");
+            Assert.Equal(5000, dict.Words.Count);
             DictionaryLookupInfo result = DictionaryLookupInfo.BuildLookupInfo(dict);
 
         }

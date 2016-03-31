@@ -60,7 +60,7 @@ namespace BoardConstruction
         //	brea	  n			  y
         //	bred	  y			  y
         //	bread	  y			  y
-        public static DictionaryLookupInfo BuildLookupInfo(WordDictionary dictionary)
+        public static DictionaryLookupInfo BuildLookupInfo(Dictionary dictionary)
         {
             DictionaryLookupInfo result = new DictionaryLookupInfo();
 

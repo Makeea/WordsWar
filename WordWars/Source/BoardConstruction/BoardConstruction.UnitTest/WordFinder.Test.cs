@@ -97,7 +97,7 @@ namespace BoardConstruction.UnitTest
         [Theory, MemberData("ThreeByThreeSample")]
         public void MyFirstTheory(GameBoard board, int minWordLength, List<string> dictionary, List<string> expected)
         {
-            WordDictionary wordDictionary = new WordDictionary(dictionary, minWordLength);
+            Dictionary wordDictionary = new Dictionary(dictionary, minWordLength);
 
             List<string> result = WordFinder.FindWords(board, wordDictionary);
             result.Sort();

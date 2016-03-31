@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Alphabets.Test.cs" />
     <Compile Include="BoardBuilder.Test.cs" />
     <Compile Include="GameBoard.Test.cs" />
     <Compile Include="WordDictionary.Test.cs" />
