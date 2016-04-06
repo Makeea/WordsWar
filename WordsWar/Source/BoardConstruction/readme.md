@@ -27,7 +27,7 @@ To build a random board we will use:
 - `BoardPublisher` - takes a board and publishes it to the cloud
 - `BoardConstructor` - coordinates all the other components.
 
-For now this will all be packaged in the `BoardConstruction.dll` in the [`\BoardConstruction`](/BoardConstruction) folder 
+For now this will all be packaged in the `BoardConstruction.dll` in the [`BoardConstruction`](/WordsWar/Source/BoardConstruction/BoardConstruction) folder 
 
 This is the high level  the `BoardConstructor` uses to create a board with a solution:
 ```csharp
@@ -67,7 +67,7 @@ This is a command line exe that will call the constructor to generate boards and
 BoardConstructionRunner.exe blah blah blah
 ```
 ### Unit Test
-There is a unit test class for each of the pieces above in the ['BoardConstruction.UnitTest'](/BoardConstruction.UnitTest) folder
+There is a unit test class for each of the pieces above in the ['BoardConstruction.UnitTest'](/WordsWar/Source/BoardConstruction/BoardConstruction.UnitTest) folder
 
 ### Sample Generated Board
 Here is what the result looks like - with 300 words found.
