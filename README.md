@@ -11,12 +11,10 @@ The following components are part of the game:
 - The online leaderboards
 
 ## Unity Game Client
-This is a Unity 5 project located in `.\WordsWar\Source\WordsWarClient\`
+This is a Unity 5 project located in [`\WordsWar\Source\WordsWarClient\`](/WordsWar/Source/WordsWarClient/)
 
 ## Board Construction and publishing
-This is a .Net based tool located in `.\WordsWar\Source\BoardConstruction\`
-
-For more information see the [Board Construction Readme!](WordsWar/Source/BoardConstruction/readme.md)
+This is a .Net based tool located in [`\WordsWar\Source\BoardConstruction\`](/WordsWar/Source/BoardConstruction/)
 
 ## License
 
