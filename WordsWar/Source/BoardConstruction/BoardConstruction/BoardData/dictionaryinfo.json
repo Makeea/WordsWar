@@ -1,0 +1,18 @@
+﻿[
+  {
+    "id": "english-words",
+    "alphabetid": "en-us",
+    "filename": "./BoardData/english-words.csv"
+  },
+  {
+    "id": "5kwords",
+    "alphabetid": "en-us",
+    "filename": "./BoardData/5000Words.csv"
+  },
+  {
+    "id": "simple",
+    "alphabetid": "en-us",
+    "filename": "./BoardData/simpledict.csv"
+  }
+]
+

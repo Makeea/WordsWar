@@ -1,9 +1,0 @@
-﻿{
-  "dictionaryinfo": [
-      {
-        "id": "5kwords",
-        "alphabetid": "en-us",
-        "filename": "./BoardData/5000Words.csv"
-      }
-  ]
-}
