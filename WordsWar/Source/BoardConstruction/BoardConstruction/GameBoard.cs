@@ -10,6 +10,12 @@ namespace BoardConstruction
 {
     public class GameBoard
     {
+        public enum BoardStringFormat {
+            None,
+            NewLines,
+            Formatted
+        };
+
         Tuple<int, int> Left(int x, int y) { return new Tuple<int, int>(x , y - 1); }
         Tuple<int, int> Right(int x, int y) { return new Tuple<int, int>(x, y + 1); }
         Tuple<int, int> Top(int x, int y) { return new Tuple<int, int>(x - 1, y); }
@@ -77,20 +83,33 @@ namespace BoardConstruction
             }
         }
 
-        public string ToFormattedString()
+        public string ToString(BoardStringFormat format)
         {
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < Size; i++)
             {
-                result.AppendFormat("row {0} :", i);
+                if (format == BoardStringFormat.Formatted)
+                {
+                    result.AppendFormat("row {0} :", i);
+                }
                 for (int j = 0; j < Size; j++)
                 {
-                    if (j == 0) result.Append("|");
-                    result.AppendFormat(" {0} ", Board[i, j]);
-                    result.Append("|");
+                    if (format == BoardStringFormat.Formatted)
+                    {
+                        if (j == 0) result.Append("|");
+                        result.AppendFormat(" {0} ", Board[i, j]);
+                        result.Append("|");
+                    }
+                    else
+                    {
+                        result.Append(Board[i, j]);
+                    }
                 }
-                result.AppendLine();
+                if (format != BoardStringFormat.None)
+                {
+                    result.AppendLine();
+                }
             }
 
             return result.ToString();
@@ -98,18 +117,7 @@ namespace BoardConstruction
 
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
-
-            for (int i = 0; i < Size; i++)
-            {
-                for (int j = 0; j < Size; j++)
-                {
-                    result.Append(Board[i, j]);
-                }
-                result.AppendLine();
-            }
-
-            return result.ToString();
+            return ToString(BoardStringFormat.NewLines);
         }
     }
 }

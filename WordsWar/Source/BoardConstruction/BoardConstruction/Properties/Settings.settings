@@ -8,5 +8,11 @@
     <Setting Name="DictionaryInfoPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">./BoardData/dictionaryinfo.json</Value>
     </Setting>
+    <Setting Name="AzureStorageLocalConfig" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">UseDevelopmentStorage=true;</Value>
+    </Setting>
+    <Setting Name="AzureStorageLocalFiddler" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://ipv4.fiddler;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

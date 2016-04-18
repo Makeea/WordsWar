@@ -40,5 +40,23 @@ namespace BoardConstruction.Properties {
                 return ((string)(this["DictionaryInfoPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UseDevelopmentStorage=true;")]
+        public string AzureStorageLocalConfig {
+            get {
+                return ((string)(this["AzureStorageLocalConfig"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://ipv4.fiddler;")]
+        public string AzureStorageLocalFiddler {
+            get {
+                return ((string)(this["AzureStorageLocalFiddler"]));
+            }
+        }
     }
 }
