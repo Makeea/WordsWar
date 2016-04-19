@@ -83,9 +83,6 @@ public class PhotonConnectionManager : Photon.PunBehaviour
         EventsStatus.text = "Room Joined, player count: " + PhotonNetwork.room.playerCount;
         PlayButtonText.text = "Waiting...";
 
-        // both clients have a GameClient
-        GameClient.Start();
-
         StartGameIfRoomFull();
     }
 

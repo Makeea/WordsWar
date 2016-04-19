@@ -9,15 +9,17 @@ namespace WordsWar.Multiplayer
     {
         // the byte will be used as Photon command ID, they start at 0 and go up - see 
         // https://doc-api.photonengine.com/en/pun/current/class_exit_games_1_1_client_1_1_photon_1_1_event_code.html
-        Connect = 0,
-        WordFound = 1,
-        Disconnect = 2
+        Connect = 1,
+        WordFound = 2,
+        Disconnect = 3
     } 
 
     public abstract class Command
     {
         public CommandType CommandType;
-        public object[] CommandData;
+        public object CommandData { get { return data; } }
+
+        protected object[] data;
 
         internal static Command FromPhotonEvent(byte eventCode, object content)
         {
@@ -25,6 +27,8 @@ namespace WordsWar.Multiplayer
             {
                 case (byte)CommandType.Connect:
                     return new CommandConnect((int)((object[])content)[0]);
+                case (byte)CommandType.WordFound:
+                    return new CommandWordFound((string)((object[])content)[0]);
                 default:
                     return null;
             }
@@ -33,26 +37,27 @@ namespace WordsWar.Multiplayer
 
     public class CommandConnect : Command
     {
-        public int PlayerId { get { return (int)CommandData[0]; } }
+        public int PlayerId { get { return (int)data[0]; } }
+
         public CommandConnect(int playerID)
         {
             CommandType = CommandType.Connect;
-            CommandData = new object[1];
+            data = new object[1];
 
-            CommandData[0] = playerID;
+            data[0] = playerID;
         }
     }
 
     public class CommandWordFound : Command
     {
-        public string Word { get { return (string)CommandData[0]; } }
+        public string Word { get { return (string)data[0]; } }
 
         public CommandWordFound(string word)
         {
             CommandType = CommandType.WordFound;
-            CommandData = new object[1];
+            data = new object[1];
 
-            CommandData[0] = word;
+            data[0] = word;
         }
     }
 

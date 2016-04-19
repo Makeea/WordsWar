@@ -13,34 +13,30 @@ namespace WordsWar.Multiplayer
         Complete
     }
 
-    public delegate void SendSnapshotDelegate(Snapshot snapshot);
-
     /// <summary>
     /// The Game Server
     /// </summary>
     public static class GameServer
     {
-        public static event SendSnapshotDelegate OnSendSnapshot;
+        public static int SnapshotsPerSecond = 3;
+        public static int MatchSecondsDuration = 60;
 
-        #region /// Send Snapshot Event
-        public static void SendSnapshotEvent(Snapshot e)
+        public static GameServerStates GameState = GameServerStates.NotStarted;
+        public static Player[] Players = new Player[2];
+
+        public static TimeSpan GameTimer = TimeSpan.Zero;
+        private static TimeSpan SnapshotTimer = TimeSpan.Zero;
+
+        private static TimeSpan SnapshotFrequency = TimeSpan.FromMilliseconds(1000 / SnapshotsPerSecond);
+        private static TimeSpan PlayingTime = TimeSpan.FromSeconds(MatchSecondsDuration);  // Seconds to complete the game
+
+        static GameServer()
         {
-            if (OnSendSnapshot != null)
-            {
-                OnSendSnapshot(e); 
-            }
+            PhotonNetwork.OnEventCall += OnPhotonEventCall;
         }
-        #endregion
 
-        static Player[] Players = new Player[2];
-        static GameServerStates GameState = GameServerStates.NotStarted;
-        static TimeSpan GameTimer = TimeSpan.Zero;
-        static TimeSpan SnapshotTimer = TimeSpan.Zero;
-
-        const int SnapshotsPerSecond = 3;
-        static TimeSpan SnapshotFrequency = TimeSpan.FromMilliseconds(1000 / SnapshotsPerSecond);
-        static TimeSpan PlayingTime = TimeSpan.FromSeconds(60);  // Seconds to complete the game
-
+        #region GAME MANAGEMENT ===============================================
+        // Start the game
         public static void StartGame(int Player1ID, int Player2ID)
         {
             Players[0] = new Player();
@@ -50,21 +46,26 @@ namespace WordsWar.Multiplayer
             Players[1].PlayerID = Player2ID;
 
             GameState = GameServerStates.Started;
-            PhotonNetwork.OnEventCall += OnPhotonEventCall;
+            GameTimer = TimeSpan.Zero;
+            SnapshotTimer = TimeSpan.Zero;
         }
 
-        /// Move the clock of the server 
+        // Move the clock of the server 
         public static void Tick(double seconds)
         {
-            GameTimer += TimeSpan.FromSeconds(seconds);
             SnapshotTimer += TimeSpan.FromSeconds(seconds);
             if (SnapshotTimer > SnapshotFrequency)
             {
                 SnapshotTimer = TimeSpan.Zero;
                 foreach (var player in Players)
                 {
-                    SendSnapshotEvent(GetSnapshot(player));
+                    SendSnapshotPhotonEvent(TakeSnapshot(player));
                 }
+            }
+
+            if (GameState == GameServerStates.Playing)
+            {
+                GameTimer += TimeSpan.FromSeconds(seconds);
             }
 
             switch (GameState)
@@ -79,7 +80,8 @@ namespace WordsWar.Multiplayer
 
         }
 
-        public static void ReceiveCommand(Command command, int playerID, params object[] paramList)
+        // Process the command
+        public static void ProcessCommand(int playerID, Command command)
         {
             switch (command.CommandType)
             {
@@ -96,11 +98,16 @@ namespace WordsWar.Multiplayer
                     }
                     break;
                 case CommandType.WordFound:
-                    string wordFound = paramList[0] as string;
-                    player = Players.FirstOrDefault(x => x.PlayerID == playerID);
-                    if (player != null)
+                    if (GameState == GameServerStates.Playing)
                     {
-                        player.Score += wordFound.Length;
+                        string wordFound = ((CommandWordFound)command).Word;
+
+                        //always give the points to the first player f
+                        player = Players.FirstOrDefault(x => x.PlayerID == playerID);
+                        if (player != null)
+                        {
+                            player.Score += wordFound.Length;
+                        }
                     }
                     break;
                 case CommandType.Disconnect:
@@ -111,25 +118,45 @@ namespace WordsWar.Multiplayer
 
         }
 
-        private static Snapshot GetSnapshot(Player player)
+        // Build the snapshot for a specific player
+        public static Snapshot TakeSnapshot(Player player)
         {
             Snapshot s = new Snapshot();
 
             s.GameState = GameState;
-            s.SecondsLeft = GameTimer;
+            s.SecondsLeft = GameTimer.TotalSeconds;
             s.Player1Score = Players[0].Score;
             s.Player2Score = Players[1].Score;
 
             return s;
         }
+        #endregion
 
+        #region SEND SNAPSHOTS=================================================
+        // Send Snapshot to client
+        private static void SendSnapshotPhotonEvent(Snapshot snapshot)
+        {
+            RaiseEventOptions options = new RaiseEventOptions();
+            options.Receivers = ExitGames.Client.Photon.ReceiverGroup.All;
+
+            PhotonNetwork.RaiseEvent(Snapshot.SnapshotEventID, snapshot.CommandData, true, options);
+        }
+        #endregion
+
+        #region RECEIVE COMMANDS===============================================
+        // Check Photon events for Game Commands
         private static void OnPhotonEventCall(byte eventCode, object content, int senderId)
         {
             // We are only receiving events for the Master Client
             if (PhotonNetwork.isMasterClient)
             {
-                ReceiveCommand(Command.FromPhotonEvent(eventCode, content), senderId);
+                Command c = Command.FromPhotonEvent(eventCode, content);
+                if (c != null)
+                {
+                    ProcessCommand(senderId, c);
+                }
             }
         }
+        #endregion
     }
 }

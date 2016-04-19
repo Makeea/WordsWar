@@ -35,7 +35,7 @@ public class LoadingScreenManager : Photon.PunBehaviour {
         PhotonNetwork.PhotonServerSettings.EnableLobbyStatistics = true;
 #if DEBUG
         // DEBUG - getting longer timeouts to debug
-        PhotonNetwork.networkingPeer.DisconnectTimeout = 1000; // 0 * 1000;
+        PhotonNetwork.networkingPeer.DisconnectTimeout = 60 * 1000;
 #endif
 
         PhotonNetwork.ConnectUsingSettings("0.1");

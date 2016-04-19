@@ -14,7 +14,7 @@ public class GameManager : Photon.PunBehaviour
 
 	// Use this for initialization
 	void Start () {
-        GameClient.SendCommand(new CommandConnect(PhotonNetwork.player.ID));
+        GameClient.SendCommandPhotonEvent(new CommandConnect(PhotonNetwork.player.ID));
 	}
 	
 	// Update is called once per frame
