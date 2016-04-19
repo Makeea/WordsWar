@@ -13,10 +13,7 @@ public class PhotonConnectionManager : Photon.PunBehaviour
 
     private Text PlayButtonText;
     
-    public 
-
-	// Use this for initialization
-	void OnEnable () {
+    public void OnEnable () {
         PlayButtonText = PlayButton.GetComponent<Text>();
         PlayButtonText.text = "Connecting...";
         PlayButton.interactable = false;
