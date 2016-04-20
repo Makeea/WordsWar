@@ -48,7 +48,8 @@ artifacts/
 *_p.c
 *_i.h
 *.ilk
-*.meta
+#*.meta
+# Added by visual studio for DNX but used in Unity, must remove
 *.obj
 *.pch
 *.pdb
