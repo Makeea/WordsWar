@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12323, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Pallete_Dark
+  m_EditorClassIdentifier: 
+  m_Presets:
+  - m_Name: 
+    m_Color: {r: 0.9490196, g: 0.96862745, b: 0.9882353, a: 1}
+  - m_Name: 
+    m_Color: {r: 0.5372549, g: 0.827451, b: 0.9529412, a: 1}
+  - m_Name: 
+    m_Color: {r: 0.9843137, g: 0.40784314, b: 0.36862746, a: 1}
+  - m_Name: 
+    m_Color: {r: 0.27450982, g: 0.33333334, b: 0.40784314, a: 1}
+  - m_Name: 
+    m_Color: {r: 0.19215687, g: 0.24313726, b: 0.30588236, a: 1}
+  - m_Name: 
+    m_Color: {r: 0.10348182, g: 0.1296086, b: 0.16176468, a: 1}
