@@ -51,12 +51,10 @@ namespace JUMP
                 SnapshotTimer = TimeSpan.Zero;
                 foreach (var player in Players)
                 {
-                    JUMPSnapshotData snapData = GameServerEngine.TakeSnapshot(player.PlayerID);
-
-                    JUMPSnapshot<JUMPSnapshotData> snap = new JUMPSnapshot<JUMPSnapshotData>(snapData);
+                    JUMPCommand_Snapshot snap = GameServerEngine.TakeSnapshot(player.PlayerID);
 
                     RaiseEventOptions options = new RaiseEventOptions();
-                    options.Receivers = ExitGames.Client.Photon.ReceiverGroup.All;
+                    options.TargetActors = new int[1] { snap.ForPlayerID };
 
                     PhotonNetwork.RaiseEvent(snap.CommandEventCode, snap.CommandData, true, options);
                 }
@@ -71,7 +69,7 @@ namespace JUMP
             {
                 if (eventCode == JUMPCommand_Connect.JUMPCommand_Connect_EventCode)
                 {
-                    JUMPCommand_Connect c = JUMPCommand_Connect.FromData((object[])content);
+                    JUMPCommand_Connect c = new JUMPCommand_Connect((object[])content);
 
                     // Set the player as connected
                     JUMPPlayer player = new JUMPPlayer();

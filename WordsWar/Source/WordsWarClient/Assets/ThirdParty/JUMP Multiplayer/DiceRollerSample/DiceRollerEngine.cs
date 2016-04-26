@@ -15,15 +15,15 @@ namespace DiceRollerSample
         public int RolledDiceValue { get { return (int)CommandData[1]; } set { CommandData[1] = value; } }
 
         // Create a command to send with this initializer
-        public DiceRollerCommand_RollDice(int rolledDiceValue) : base(new object[2], RollDice_EventCode)
+        public DiceRollerCommand_RollDice(int playerID, int rolledDiceValue) : base(new object[2], RollDice_EventCode)
         {
+            PlayerID = playerID;
             RolledDiceValue = rolledDiceValue;
         }
 
         // Create a command when receiving it from Photon
-        public static DiceRollerCommand_RollDice FromData(object[] data)
+        public DiceRollerCommand_RollDice(object[] data) : base(data, RollDice_EventCode)
         {
-            return (DiceRollerCommand_RollDice)new JUMPCommand(data, RollDice_EventCode);
         }
     }
 
@@ -34,14 +34,24 @@ namespace DiceRollerSample
     }
 
     // Custom Snapshot
-    public class DiceRollerSnapshotData : JUMPSnapshotData
+    public class DiceRoller_Snapshot : JUMPCommand_Snapshot
     {
-        public int ForPlayerID;
-        public int MyScore;
-        public int OpponentScore;
-        public double SecondsRemaining;
-        public DiceRollerGameStages Stage;
-        public int WinnerPlayerID;
+        // ForPlayerID is at CommandData[0]
+        public int MyScore { get { return (int)CommandData[1]; } set { CommandData[1] = value; } }
+        public int OpponentScore { get { return (int)CommandData[2]; } set { CommandData[2] = value; } }
+        public float SecondsRemaining { get { return (float)CommandData[3]; } set { CommandData[3] = value; } }
+        public DiceRollerGameStages Stage { get { return (DiceRollerGameStages)CommandData[4]; } set { CommandData[4] = value; } }
+        public int WinnerPlayerID { get { return (int)CommandData[5]; } set { CommandData[5] = value; } }
+
+        // Create a command to send with this initializer
+        public DiceRoller_Snapshot() : base(new object[6])
+        {
+        }
+
+        // Create a command when receiving it from Photon
+        public DiceRoller_Snapshot(object[] data) : base(data)
+        {
+        }
     }
 
     // Custom Engine
@@ -55,7 +65,7 @@ namespace DiceRollerSample
     public class DiceRollerGameState
     {
         public Dictionary<int, DiceRollerPlayer> Players = new Dictionary<int, DiceRollerPlayer>();
-        public double SecondsRemaining;
+        public float SecondsRemaining;
         public DiceRollerGameStages Stage;
         public int WinnerPlayerID;
     }
@@ -74,7 +84,7 @@ namespace DiceRollerSample
         {
             if (eventCode == DiceRollerCommand_RollDice.RollDice_EventCode)
             {
-                return DiceRollerCommand_RollDice.FromData((object[]) content);
+                return new DiceRollerCommand_RollDice((object[]) content);
             }
             return null;
         }
@@ -86,9 +96,12 @@ namespace DiceRollerSample
                 DiceRollerCommand_RollDice rollDiceCommand = command as DiceRollerCommand_RollDice;
 
                 DiceRollerPlayer player;
-                if (GameState.Players.TryGetValue(rollDiceCommand.PlayerID, out player))
+                if (GameState.Stage == DiceRollerGameStages.Playing)
                 {
-                    player.Score += rollDiceCommand.RolledDiceValue;
+                    if (GameState.Players.TryGetValue(rollDiceCommand.PlayerID, out player))
+                    {
+                        player.Score += rollDiceCommand.RolledDiceValue;
+                    }
                 }
             }
         }
@@ -114,7 +127,7 @@ namespace DiceRollerSample
         {
             if (GameState.Stage == DiceRollerGameStages.Playing)
             {
-                GameState.SecondsRemaining -= ElapsedSeconds;
+                GameState.SecondsRemaining -= (float) ElapsedSeconds;
                 if (GameState.SecondsRemaining <= 0)
                 {
                     int maxscore = 0;
@@ -133,9 +146,12 @@ namespace DiceRollerSample
             }
         }
 
-        public JUMPSnapshotData TakeSnapshot(int ForPlayerID)
+        public JUMPCommand_Snapshot TakeSnapshot(int ForPlayerID)
         {
-            DiceRollerSnapshotData snap = new DiceRollerSnapshotData();
+            DiceRoller_Snapshot snap = new DiceRoller_Snapshot();
+            snap.ForPlayerID = ForPlayerID;
+            snap.MyScore = 0;
+            snap.OpponentScore = 0;
             foreach (var item in GameState.Players)
             {
                 if (item.Value.PlayerID == ForPlayerID)
@@ -151,7 +167,7 @@ namespace DiceRollerSample
             snap.Stage = GameState.Stage;
             snap.WinnerPlayerID = GameState.WinnerPlayerID;
 
-            return (JUMPSnapshotData) snap;
+            return (JUMPCommand_Snapshot) snap;
         }
     }
 }

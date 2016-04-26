@@ -726,7 +726,7 @@ namespace JUMP
                 LogInfo(() => FormatLogMessage("Starting a game client with Client of class: {0}", GameClient.GetType().ToString()));
                 if (GameClient is JUMPGameClient)
                 {
-                    ((JUMPGameClient)GameClient).ConnectToServer();
+                    Singleton<JUMPGameClient>.Instance.ConnectToServer();
                 }
                 else
                 {

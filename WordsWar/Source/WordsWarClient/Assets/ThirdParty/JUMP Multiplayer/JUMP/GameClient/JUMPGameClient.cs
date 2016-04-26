@@ -7,7 +7,8 @@ using UnityEngine.Events;
 
 namespace JUMP
 {
-    public class JUMPSnapshotReceivedUnityEvent : UnityEvent<JUMPSnapshotData> { }
+    [System.Serializable]
+    public class JUMPSnapshotReceivedUnityEvent : UnityEvent<JUMPCommand_Snapshot> { }
 
     public class JUMPGameClient: MonoBehaviour
     {
@@ -26,9 +27,9 @@ namespace JUMP
         // receive snapshots from server - you can cast JUMPSnapshotData to your own custom type
         private void OnPhotonEventCall(byte eventCode, object content, int senderId)
         {
-            if (eventCode == JUMPSnapshot.JUMPSnapshot_EventCode)
+            if (eventCode == JUMPCommand_Snapshot.JUMPSnapshot_EventCode)
             {
-                JUMPSnapshotData snap = JUMPSnapshot.FromData((object[])content).SnapshotData;
+                JUMPCommand_Snapshot snap = new JUMPCommand_Snapshot((object[])content);
 
                 if (OnSnapshotReceived != null)
                 {

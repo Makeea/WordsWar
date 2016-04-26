@@ -5,7 +5,7 @@ using System.Text;
 
 namespace JUMP
 {
-     public class JUMPSnapshotData
+    public class JUMPSnapshotData
     {
     }
 

@@ -8,7 +8,6 @@ namespace JUMP
     public class JUMPCommand
     {
         public byte CommandEventCode { get; protected set; }
-        public int SenderID = -1;
 
         public object[] CommandData;
 
@@ -30,13 +29,18 @@ namespace JUMP
             PlayerID = playerID;
         }
 
-        public JUMPCommand_Connect(object[] data, byte eventcode) : base(data, eventcode)
+        public JUMPCommand_Connect(object[] data) : base(data, JUMPCommand_Connect_EventCode)
         {
         }
+    }
 
-        public static JUMPCommand_Connect FromData(object[] data)
+    public class JUMPCommand_Snapshot : JUMPCommand
+    {
+        public const byte JUMPSnapshot_EventCode = 190;
+        public int ForPlayerID { get { return (int)CommandData[0]; } set { CommandData[0] = value; } }
+
+        public JUMPCommand_Snapshot(object[] data) : base(data, JUMPSnapshot_EventCode)
         {
-            return new JUMPCommand_Connect(data, JUMPCommand_Connect_EventCode);
         }
     }
 }

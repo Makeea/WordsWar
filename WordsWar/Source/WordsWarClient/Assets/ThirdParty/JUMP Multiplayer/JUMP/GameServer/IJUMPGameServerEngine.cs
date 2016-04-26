@@ -11,6 +11,6 @@ namespace JUMP
         void Tick(double ElapsedSeconds);
         void ProcessCommand(JUMPCommand command);
         JUMPCommand CommandFromEvent(byte eventCode, object content);
-        JUMPSnapshotData TakeSnapshot(int ForPlayerID);
+        JUMPCommand_Snapshot TakeSnapshot(int ForPlayerID);
     }
 }
