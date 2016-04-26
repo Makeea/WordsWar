@@ -7,12 +7,11 @@ using UnityEngine.Events;
 
 namespace JUMP
 {
-    [System.Serializable]
-    public class JUMPSnapshotReceivedUnityEvent : UnityEvent<JUMPCommand_Snapshot> { }
+    public delegate void JUMPSnapshotReceivedDelegate(JUMPCommand_Snapshot snapshot);
 
     public class JUMPGameClient: MonoBehaviour
     {
-        public JUMPSnapshotReceivedUnityEvent OnSnapshotReceived;
+        public event JUMPSnapshotReceivedDelegate OnSnapshotReceived;
 
         public void Awake()
         {
@@ -33,7 +32,7 @@ namespace JUMP
 
                 if (OnSnapshotReceived != null)
                 {
-                    OnSnapshotReceived.Invoke(snap);
+                    OnSnapshotReceived(snap);
                 }
             }
         }
@@ -52,6 +51,11 @@ namespace JUMP
         {
             JUMPCommand_Connect c = new JUMPCommand_Connect(PhotonNetwork.player.ID);
             SendCommandToServer(c);
+        }
+
+        public void Quit(JUMPMultiplayer.QuitReason reason)
+        {
+            // TODO: add send message to server when quitting
         }
     }
 }

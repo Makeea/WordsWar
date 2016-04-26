@@ -7,6 +7,9 @@ using ExitGames.Client.Photon;
 
 namespace JUMP
 {
+    [System.Serializable]
+    public class JUMPSnapshotReceivedUnityEvent : UnityEvent<JUMPCommand_Snapshot> { }
+
     public class JUMPMultiplayer : Photon.PunBehaviour
     {
         public enum Stages
@@ -46,8 +49,8 @@ namespace JUMP
 
         // Play Stage
         public static bool IsPlayingGame { get { return (IsConnectedToGameRoom && IsRoomFull); } }
-        public void QuitPlay() { DoQuitPlay(); }
-        public MonoBehaviour GameClient;
+        public void QuitPlay() { DoQuitPlay(QuitReason.WeQuit); }
+        public JUMPSnapshotReceivedUnityEvent OnSnapshotReceived;
         public UnityEvent OnPlayDisconnected;
 
         // PRIVATE variables.
@@ -55,6 +58,14 @@ namespace JUMP
         private bool cancelingGameRoom = false;
         private bool quittingPlay = false;
         private bool attemptingToJoinOrCreateRoom = false;
+        public enum QuitReason
+        {
+            WeCanceledMatchmake,
+            WeCanceledGameRoom,
+            WeLostConnection,
+            WeQuit,
+            TheyLostConnection
+        }
 
         #region UNITY EVENTS **************************************************
         /// <summary>
@@ -240,6 +251,11 @@ namespace JUMP
                     }
                     if (Stage == Stages.Play)
                     {
+                        if (!quittingPlay)
+                        {
+                            // we were not trying to quit, we lost connection
+                            DoQuitPlay(QuitReason.WeLostConnection);
+                        }
                         quittingPlay = false;
                         RaiseOnPlayDisconnected();
                     }
@@ -453,7 +469,7 @@ namespace JUMP
             if (Stage == Stages.Play)
             {
                 LogDebug(() => FormatLogMessage("A player disconnected, we have to bail, we don't support host migration."));
-                DoQuitPlay();
+                DoQuitPlay(QuitReason.TheyLostConnection);
             }
         }
         #endregion
@@ -646,6 +662,7 @@ namespace JUMP
                 else
                 {
                     LogDebug(() => FormatLogMessage("Matchmake canceled, leaving the lobby."));
+
                     cancelingMatchmaking = true;
                     PhotonNetwork.LeaveLobby();
                 }
@@ -658,6 +675,11 @@ namespace JUMP
             if (PhotonNetwork.inRoom)
             {
                 LogDebug(() => FormatLogMessage("Game Room canceled, leaving the room."));
+
+                // shut down the server
+                Singleton<JUMPGameServer>.Instance.Quit(QuitReason.WeCanceledGameRoom);
+                Singleton<JUMPGameServer>.DestroyInstance();
+
                 cancelingGameRoom = true;
                 PhotonNetwork.LeaveRoom();
             }
@@ -684,6 +706,13 @@ namespace JUMP
         private void DoStartGameServer()
         {
             LogInfo(() => FormatLogMessage("JUMP.DoStartGameServer"));
+
+            if (!PhotonNetwork.isMasterClient)
+            {
+                LogError(() => FormatLogMessage("Trying to start a game server not on the master client"));
+                return;
+            }
+
             if (string.IsNullOrEmpty(GameServerEngineTypeName))
             {
                 LogError(() => FormatLogMessage("Trying to start a game server with a null GameServerEngine object"));
@@ -703,35 +732,33 @@ namespace JUMP
             }
         }
 
-        private void DoQuitPlay()
+        private void DoStartGameClient()
         {
-            LogInfo(() => FormatLogMessage("JUMP.DoQuitPlay"));
+            LogInfo(() => FormatLogMessage("JUMP.DoStartGameClient"));
+
+            LogInfo(() => FormatLogMessage("Starting a game client"));
+            Singleton<JUMPGameClient>.Instance.OnSnapshotReceived += RaiseOnSnapshotReceived;
+            Singleton<JUMPGameClient>.Instance.ConnectToServer();
+        }
+
+        private void DoQuitPlay(QuitReason reason)
+        {
+            LogInfo(() => FormatLogMessage("JUMP.DoQuitPlay, reason: {0}", reason));
+
+            // quit client and destroy it
+            Singleton<JUMPGameClient>.Instance.Quit(reason);
+            Singleton<JUMPGameClient>.DestroyInstance();
+
+            // quit server and destroy it
+            Singleton<JUMPGameServer>.Instance.Quit(reason);
+            Singleton<JUMPGameServer>.DestroyInstance();
+
+            // leave the room if we are still in there
             if (PhotonNetwork.inRoom)
             {
                 LogDebug(() => FormatLogMessage("Quit play invoked, leaving the room."));
                 quittingPlay = true;
                 PhotonNetwork.LeaveRoom();
-            }
-        }
-
-        private void DoStartGameClient()
-        {
-            LogInfo(() => FormatLogMessage("JUMP.DoStartGameClient"));
-            if (GameClient == null)
-            {
-                LogError(() => FormatLogMessage("Trying to start a game client with a null GameClient object"));
-            }
-            else
-            {
-                LogInfo(() => FormatLogMessage("Starting a game client with Client of class: {0}", GameClient.GetType().ToString()));
-                if (GameClient is JUMPGameClient)
-                {
-                    Singleton<JUMPGameClient>.Instance.ConnectToServer();
-                }
-                else
-                {
-                    LogError(() => FormatLogMessage("To start a game server it has to be of class JUMPGameClient"));
-                }
             }
         }
         #endregion
@@ -783,6 +810,12 @@ namespace JUMP
         {
             LogInfo(() => FormatLogMessage("JUMP.RaiseOnPlayDisconnected"));
             OnPlayDisconnected.Invoke();
+        }
+
+        private void RaiseOnSnapshotReceived(JUMPCommand_Snapshot snapshot)
+        {
+            LogDebug(() => FormatLogMessage("JUMP.RaiseOnSnapshotReceived"));
+            OnSnapshotReceived.Invoke(snapshot);
         }
         #endregion
 

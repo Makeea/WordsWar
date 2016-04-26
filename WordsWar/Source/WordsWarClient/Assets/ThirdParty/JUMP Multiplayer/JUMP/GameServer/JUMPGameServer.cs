@@ -94,5 +94,10 @@ namespace JUMP
                 }
             }
         }
+
+        public void Quit(JUMPMultiplayer.QuitReason reason)
+        {
+            // TODO: add send message to server when quitting
+        }
     }
 }

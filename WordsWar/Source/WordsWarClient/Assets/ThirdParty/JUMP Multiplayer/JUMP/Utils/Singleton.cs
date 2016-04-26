@@ -70,6 +70,29 @@ namespace JUMP
             }
         }
 
+        public static void DestroyInstance()
+        {
+            if (applicationIsQuitting)
+            {
+                Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
+                    "' don't need to destroy, we are quitting.");
+                return;
+            }
+            lock (_lock)
+            {
+                if (_instance == null)
+                {
+                    _instance = (T)FindObjectOfType(typeof(T));
+                }
+                if (_instance != null)
+                {
+                    GameObject singleton = _instance.gameObject;
+                    _instance = null;
+                    Destroy(singleton);
+                }
+            }
+        }
+
         private static bool applicationIsQuitting = false;
 
         /// <summary>
