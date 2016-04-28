@@ -8,6 +8,6 @@ namespace JUMP
     public class JUMPPlayer
     {
         public int PlayerID;
-        public bool Connected = false;
+        public bool IsConnected = false;
     }
 }

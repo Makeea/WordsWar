@@ -74,11 +74,11 @@ namespace JUMP
                     // Set the player as connected
                     JUMPPlayer player = new JUMPPlayer();
                     player.PlayerID = c.PlayerID;
-                    player.Connected = true;
+                    player.IsConnected = true;
                     Players.Add(player);
 
                     // When all the players are connected, start the game.
-                    int connectedplayers = Players.Count(p => p.Connected);
+                    int connectedplayers = Players.Count(p => p.IsConnected);
                     if (connectedplayers == JUMPOptions.NumPlayers)
                     {
                         GameServerEngine.StartGame(Players);

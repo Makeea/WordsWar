@@ -14,8 +14,7 @@ namespace JUMP
 #else
         public static int DisconnectTimeout = 10 * 1000;
 #endif
-        public const byte Snapshot_EventCode = 190;
-        public const int SnapshotsPerSec = 3;
+        public static int SnapshotsPerSec = 3;
     }
 
 }

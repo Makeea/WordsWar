@@ -33,6 +33,22 @@ namespace DiceRollerSample
         public int Score = 0;
     }
 
+    // Custom Engine
+    public enum DiceRollerGameStages
+    {
+        WaitingForPlayers,
+        Playing,
+        Complete
+    }
+
+    public class DiceRollerGameState
+    {
+        public Dictionary<int, DiceRollerPlayer> Players = new Dictionary<int, DiceRollerPlayer>();
+        public float SecondsRemaining;
+        public DiceRollerGameStages Stage;
+        public int WinnerPlayerID;
+    }
+
     // Custom Snapshot
     public class DiceRoller_Snapshot : JUMPCommand_Snapshot
     {
@@ -54,22 +70,6 @@ namespace DiceRollerSample
         }
     }
 
-    // Custom Engine
-    public enum DiceRollerGameStages
-    {
-        WaitingForPlayers,
-        Playing,
-        Complete
-    }
-
-    public class DiceRollerGameState
-    {
-        public Dictionary<int, DiceRollerPlayer> Players = new Dictionary<int, DiceRollerPlayer>();
-        public float SecondsRemaining;
-        public DiceRollerGameStages Stage;
-        public int WinnerPlayerID;
-    }
-
     public class DiceRollerEngine : IJUMPGameServerEngine
     {
         private DiceRollerGameState GameState;
@@ -89,6 +89,23 @@ namespace DiceRollerSample
             return null;
         }
 
+        public void StartGame(List<JUMPPlayer> Players)
+        {
+            GameState = new DiceRollerGameState();
+            GameState.SecondsRemaining = 30;
+            GameState.Stage = DiceRollerGameStages.Playing;
+
+            foreach (var pl in Players)
+            {
+                DiceRollerPlayer player = new DiceRollerPlayer();
+                player.PlayerID = pl.PlayerID;
+                player.IsConnected = pl.IsConnected;
+                player.Score = 0;
+
+                GameState.Players.Add(player.PlayerID, player);
+            }
+        }
+
         public void ProcessCommand(JUMPCommand command)
         {
             if (command.CommandEventCode == DiceRollerCommand_RollDice.RollDice_EventCode)
@@ -103,23 +120,6 @@ namespace DiceRollerSample
                         player.Score += rollDiceCommand.RolledDiceValue;
                     }
                 }
-            }
-        }
-
-        public void StartGame(List<JUMPPlayer> Players)
-        {
-            GameState = new DiceRollerGameState();
-            GameState.SecondsRemaining = 30;
-            GameState.Stage = DiceRollerGameStages.Playing;
-
-            foreach (var pl in Players)
-            {
-                DiceRollerPlayer player = new DiceRollerPlayer();
-                player.PlayerID = pl.PlayerID;
-                player.Connected = pl.Connected;
-                player.Score = 0;
-
-                GameState.Players.Add(player.PlayerID, player);
             }
         }
 

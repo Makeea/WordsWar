@@ -21,12 +21,23 @@ namespace JUMP
             Play
         }
 
+        public enum QuitReason
+        {
+            WeCanceledMatchmake,
+            WeCanceledGameRoom,
+            WeLostConnection,
+            WeQuit,
+            TheyLostConnection
+        }
+
         public Stages Stage = Stages.Connection;
         public static bool IsOffline { get { return PhotonNetwork.offlineMode; } }
         public static bool IsRoomFull {  get { return PhotonNetwork.inRoom ? (PhotonNetwork.room.playerCount == PhotonNetwork.room.maxPlayers) : false; } }
+        public DisconnectCause OfflineConnectReason { get; private set; }
+        public QuitReason QuitGameReason { get; private set; }
+
         // Connection Stage
         public UnityEvent OnMasterConnect;
-        public DisconnectCause OfflineConnectReason { get; private set; }
 
         // Master Stage 
         public static bool IsConnectedToMaster { get { return ((PhotonNetwork.connectionStateDetailed == PeerState.ConnectedToMaster) || (PhotonNetwork.connectionStateDetailed == PeerState.Authenticated)); } }
@@ -58,14 +69,6 @@ namespace JUMP
         private bool cancelingGameRoom = false;
         private bool quittingPlay = false;
         private bool attemptingToJoinOrCreateRoom = false;
-        public enum QuitReason
-        {
-            WeCanceledMatchmake,
-            WeCanceledGameRoom,
-            WeLostConnection,
-            WeQuit,
-            TheyLostConnection
-        }
 
         #region UNITY EVENTS **************************************************
         /// <summary>
@@ -173,7 +176,8 @@ namespace JUMP
             LogInfo(() => FormatLogMessage("Photon.OnConnectedToMaster"));
             if (Stage == Stages.Connection)
             {
-                LogDebug(() => FormatLogMessage("We are connected to Photon, move on to the master screen."));
+                // Note: we are also called here if we set Offline=true.
+                LogDebug(() => FormatLogMessage("We are connected to Photon, move on to the master screen. Offline Mode: {0}", PhotonNetwork.offlineMode));
                 RaiseOnMasterConnect();
             }
             else if (Stage == Stages.GameRoom)
@@ -213,7 +217,7 @@ namespace JUMP
             {
                 LogError(() => FormatLogMessage("Failed to connected to Master Server: {0}", cause.ToString()));
                 OfflineConnectReason = cause;
-                // OnDisconnectFromPhoton will be called by Photon now.
+                // OnDisconnectedFromPhoton will be called by Photon now.
             }
         }
 
@@ -280,7 +284,7 @@ namespace JUMP
             {
                 LogError(() => FormatLogMessage("The connection to photon failed : {0}", cause.ToString()));
                 OfflineConnectReason = cause;
-                // OnDisconnectFromPhoton will be called by Photon now.
+                // OnDisconnectedFromPhoton will be called by Photon now.
             }
         }
 
@@ -744,6 +748,8 @@ namespace JUMP
         private void DoQuitPlay(QuitReason reason)
         {
             LogInfo(() => FormatLogMessage("JUMP.DoQuitPlay, reason: {0}", reason));
+
+            QuitGameReason = reason;
 
             // quit client and destroy it
             Singleton<JUMPGameClient>.Instance.Quit(reason);
