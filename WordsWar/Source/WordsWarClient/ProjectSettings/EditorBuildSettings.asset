@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ThirdParty/JUMP Multiplayer/DiceRollerSample/DiceRollerConnection.unity
+    path: Assets/_Scenes/WordsWarConnection.unity
   - enabled: 1
-    path: Assets/ThirdParty/JUMP Multiplayer/DiceRollerSample/DiceRollerGameRoom.unity
+    path: Assets/_Scenes/WordsWarGameRoom.unity
   - enabled: 1
-    path: Assets/ThirdParty/JUMP Multiplayer/DiceRollerSample/DiceRollerMaster.unity
+    path: Assets/_Scenes/WordsWarMaster.unity
   - enabled: 1
-    path: Assets/ThirdParty/JUMP Multiplayer/DiceRollerSample/DiceRollerMatchmakeLobby.unity
+    path: Assets/_Scenes/WordsWarMatchmakeLobby.unity
   - enabled: 1
-    path: Assets/ThirdParty/JUMP Multiplayer/DiceRollerSample/DiceRollerPlay.unity
+    path: Assets/_Scenes/WordsWarPlay.unity

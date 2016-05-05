@@ -35,7 +35,7 @@ public class DiceRollerGameManager : MonoBehaviour {
         {
             RollDice.GetComponent<Text>().text = "Rolled a " + score + " \nroll again.."; 
         }
-        Singleton<JUMPGameClient>.Instance.SendCommandToServer(new DiceRollerCommand_RollDice(PhotonNetwork.player.ID, score));
+        Singleton<JUMPGameClient>.Instance.SendCommandToServer(new DiceRollerCommand_RollDice(JUMPMultiplayer.PlayerID, score));
     }
 
     // Use this for initialization
