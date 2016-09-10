@@ -40,7 +40,7 @@ public class DiceRollerGameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        UnityEngine.Random.seed = System.DateTime.Now.Millisecond;
+		UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
     }
 
     // Update is called once per frame

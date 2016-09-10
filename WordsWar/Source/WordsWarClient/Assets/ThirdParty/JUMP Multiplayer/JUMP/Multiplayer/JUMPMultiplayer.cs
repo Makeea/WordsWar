@@ -41,20 +41,20 @@ namespace JUMP
         public UnityEvent OnMasterConnect;
 
         // Master Stage 
-        public static bool IsConnectedToMaster { get { return ((PhotonNetwork.connectionStateDetailed == PeerState.ConnectedToMaster) || (PhotonNetwork.connectionStateDetailed == PeerState.Authenticated)); } }
+		public static bool IsConnectedToMaster { get { return ((PhotonNetwork.connectionStateDetailed == ClientState.ConnectedToMaster) || (PhotonNetwork.connectionStateDetailed == ClientState.Authenticated)); } }
         public void Matchmake() { DoMatchmake();  }
         public UnityEvent OnMasterDisconnect;
         public UnityEvent OnMatchmakeLobbyConnect;
 
         // MatchmakeLobby Stage
-        public static bool IsConnectedToMatchmakeLobby { get { return (PhotonNetwork.connectionStateDetailed == PeerState.JoinedLobby); } }
+		public static bool IsConnectedToMatchmakeLobby { get { return (PhotonNetwork.connectionStateDetailed == ClientState.JoinedLobby); } }
         public void CancelMatchmake() { DoCancelMatchmake(); }
         public UnityEvent OnMatchmakeLobbyDisconnect;
         public string GameServerEngineTypeName;
         public UnityEvent OnGameRoomConnect;
 
         // GameRoom Stage
-        public static bool IsConnectedToGameRoom { get { return ((PhotonNetwork.connectionStateDetailed == PeerState.Joined)); } }
+		public static bool IsConnectedToGameRoom { get { return ((PhotonNetwork.connectionStateDetailed == ClientState.Joined)); } }
         public void CancelGameRoom() { DoCancelGameRoom();  }
         public UnityEvent OnGameRoomDisconnect;
         public UnityEvent OnPlayConnect;
@@ -458,9 +458,9 @@ namespace JUMP
                 LogDebug(() => FormatLogMessage("We could not join a room, let's create one and wait for players."));
                 attemptingToJoinOrCreateRoom = true;
                 RoomOptions opt = new RoomOptions();
-                opt.maxPlayers = JUMPOptions.NumPlayers;
-                opt.isOpen = true;
-                opt.isVisible = true;
+				opt.MaxPlayers = JUMPOptions.NumPlayers;
+				opt.IsOpen = true;
+				opt.IsVisible = true;
                 PhotonNetwork.CreateRoom(null, opt, null);
             }
         }

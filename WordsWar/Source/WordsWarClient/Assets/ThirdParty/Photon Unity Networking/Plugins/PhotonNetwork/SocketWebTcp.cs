@@ -11,8 +11,9 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using SupportClassPun = ExitGames.Client.Photon.SupportClass;
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL || UNITY_XBOXONE
 
 namespace ExitGames.Client.Photon
 {
@@ -75,7 +76,7 @@ namespace ExitGames.Client.Photon
             }
 
             websocketConnectionObject = new GameObject("websocketConnectionObject");
-            MonoBehaviour mb = websocketConnectionObject.AddComponent<MonoBehaviour>();
+            MonoBehaviour mb = websocketConnectionObject.AddComponent<MonoBehaviourExt>();
             // TODO: not hidden for debug
             //websocketConnectionObject.hideFlags = HideFlags.HideInHierarchy;
             UnityEngine.Object.DontDestroyOnLoad(websocketConnectionObject);
@@ -136,7 +137,7 @@ namespace ExitGames.Client.Photon
             {
                 if (this.ReportDebugOfLevel(DebugLevel.ALL))
                 {
-                    this.Listener.DebugReturn(DebugLevel.ALL, "Sending: " + SupportClass.ByteArrayToString(data));
+                    this.Listener.DebugReturn(DebugLevel.ALL, "Sending: " + SupportClassPun.ByteArrayToString(data));
                 }
                 this.sock.Send(data);
             }
@@ -200,7 +201,7 @@ namespace ExitGames.Client.Photon
 
 						if (this.ReportDebugOfLevel(DebugLevel.ALL))
 						{
-							this.Listener.DebugReturn(DebugLevel.ALL, "TCP << " + inBuff.Length + " = " + SupportClass.ByteArrayToString(inBuff));
+							this.Listener.DebugReturn(DebugLevel.ALL, "TCP << " + inBuff.Length + " = " + SupportClassPun.ByteArrayToString(inBuff));
 						}
 
 
@@ -246,6 +247,8 @@ namespace ExitGames.Client.Photon
             Disconnect();
         }
     }
+
+	internal class MonoBehaviourExt : MonoBehaviour {}
 }
 
 #endif

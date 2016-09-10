@@ -41,7 +41,7 @@ namespace JUMP
         public void SendCommandToServer(JUMPCommand c)
         {
             RaiseEventOptions options = new RaiseEventOptions();
-            options.Receivers = ExitGames.Client.Photon.ReceiverGroup.MasterClient;
+            options.Receivers = ReceiverGroup.MasterClient;
 
             PhotonNetwork.RaiseEvent(c.CommandEventCode, c.CommandData, true, options);
         }

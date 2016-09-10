@@ -1,3 +1,15 @@
+// ----------------------------------------------------------------------------
+// <copyright file="ServerSettingsInspector.cs" company="Exit Games GmbH">
+//   PhotonNetwork Framework for Unity - Copyright (C) 2016 Exit Games GmbH
+// </copyright>
+// <summary>
+//   This is a custom editor for the ServerSettings scriptable object.
+// </summary>
+// <author>developer@exitgames.com</author>
+// ----------------------------------------------------------------------------
+
+//#define PHOTON_VOICE
+
 using System;
 using ExitGames.Client.Photon;
 using UnityEditor;
@@ -14,12 +26,14 @@ public class ServerSettingsInspector : Editor
 
     private bool showMustHaveRegion;
     private bool showAppIdHint;
-
+#if PHOTON_VOICE
+    private bool showVoiceAppIdHint;
+#endif
 
     public override void OnInspectorGUI()
     {
         ServerSettings settings = (ServerSettings) target;
-
+        Undo.RecordObject(settings, "Edit PhotonServerSettings");
 
         settings.HostType = (ServerSettings.HostingOption) EditorGUILayout.EnumPopup("Hosting", settings.HostType);
         EditorGUI.indentLevel = 1;
@@ -171,12 +185,28 @@ public class ServerSettingsInspector : Editor
         GUILayout.Space(20);
         GUILayout.EndHorizontal();
 
+#if PHOTON_VOICE
+        GUILayout.Space(20);
+        EditorGUILayout.LabelField("Photon Voice Settings");
+        // voice appid
+        string valVoiceAppId = EditorGUILayout.TextField("Voice AppId", settings.VoiceAppID);
+        if (valVoiceAppId != settings.VoiceAppID)
+        {
+            settings.VoiceAppID = valVoiceAppId;
+            this.showVoiceAppIdHint = !IsAppId(settings.VoiceAppID);
+        }
+        if (this.showVoiceAppIdHint)
+        {
+            EditorGUILayout.HelpBox("The Photon Voice needs an AppId (GUID) set.\nYou can find it online in your Dashboard.", MessageType.Warning);
+        }
+#endif
+
         //SerializedProperty sp = serializedObject.FindProperty("RpcList");
         //EditorGUILayout.PropertyField(sp, true);
 
         if (GUI.changed)
         {
-            EditorUtility.SetDirty(target);
+            EditorUtility.SetDirty(target);     // even in Unity 5.3+ it's OK to SetDirty() for non-scene objects.
         }
     }
 
