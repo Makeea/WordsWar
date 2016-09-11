@@ -65,7 +65,7 @@ namespace WordsWarEngine
     {
         private WordsWarGameState GameState;
         public const int CountDownSeconds = 5;
-        public const int PlayTimeSeconds = 30;
+        public const int PlayTimeSeconds = 60;
 
         public WordsWarServerEngine()
         {
