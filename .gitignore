@@ -285,4 +285,5 @@ sysinfo.txt
 ## CUSTOM
 *_data/
 output_log.txt
-
+#PC Builds
+*.exe
