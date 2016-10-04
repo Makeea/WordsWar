@@ -244,6 +244,6 @@ public class MainPageScript : MonoBehaviour {
     public void GoToMatchmake()
     {
         // Load the debug screen to allow pre-sign in with Facebook
-        SceneManager.LoadScene("MatchMaking");
+        SceneManager.LoadScene("Matchmake");
     }
 }
