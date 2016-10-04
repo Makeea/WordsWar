@@ -1,7 +1,10 @@
 fileFormatVersion: 2
-guid: 84dceb0dd4928e742a7fc69e19090a88
+guid: 8f26f5eb8f80f7145ab5b67e4be6c3fe
+labels:
+- JumpMultiplayer
+- JumpDemo
 folderAsset: yes
-timeCreated: 1461187203
+timeCreated: 1462203835
 licenseType: Free
 DefaultImporter:
   userData: 

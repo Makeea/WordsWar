@@ -6,12 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/WordsWarConnection.unity
+    path: Assets/OnlineFlow/MainPage.unity
   - enabled: 1
-    path: Assets/_Scenes/WordsWarGameRoom.unity
+    path: Assets/OnlineFlow/DebugLogin.unity
   - enabled: 1
-    path: Assets/_Scenes/WordsWarMaster.unity
-  - enabled: 1
-    path: Assets/_Scenes/WordsWarMatchmakeLobby.unity
-  - enabled: 1
-    path: Assets/_Scenes/WordsWarPlay.unity
+    path: Assets/OnlineFlow/MatchMaking.unity
