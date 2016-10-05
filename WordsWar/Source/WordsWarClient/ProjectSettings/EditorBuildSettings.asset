@@ -13,3 +13,5 @@ EditorBuildSettings:
     path: Assets/OnlineFlow/Matchmake.unity
   - enabled: 1
     path: Assets/OnlineFlow/Play.unity
+  - enabled: 1
+    path: Assets/OnlineFlow/Result.unity
