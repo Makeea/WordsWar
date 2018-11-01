@@ -16,7 +16,8 @@ namespace BoardConstruction
 
             if (BoardEvaluator.EvaluateBoard(sol))
             {
-                BoardPublisher.Publish(sol);
+                // Commenting publishing of the solution, we are not connected to Azure Storage now.
+                // BoardPublisher.Publish(sol);
                 return sol;
             }
             else
